@@ -3,7 +3,6 @@ using Mango.Services.ProductAPI.DbContexts;
 using Mango.Services.ProductAPI.Models;
 using Mango.Services.ProductAPI.Models.Dto;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace Mango.Services.ProductAPI.Repository
 {
@@ -17,10 +16,11 @@ namespace Mango.Services.ProductAPI.Repository
             _db = db;
             _mapper = mapper;
         }
-        public async Task<ProductDto> GetUpdateProduct(ProductDto productDto)
+
+        public async Task<ProductDto> CreateUpdateProduct(ProductDto productDto)
         {
             Product product = _mapper.Map<ProductDto, Product>(productDto);
-            if(product.ProductId > 0)
+            if (product.ProductId > 0)
             {
                 _db.Products.Update(product);
             }
@@ -37,7 +37,7 @@ namespace Mango.Services.ProductAPI.Repository
             try
             {
                 Product product = await _db.Products.FirstOrDefaultAsync(u => u.ProductId == productId);
-                if(product == null)
+                if (product == null)
                 {
                     return false;
                 }
@@ -51,12 +51,7 @@ namespace Mango.Services.ProductAPI.Repository
             }
         }
 
-        public Task<ProductDto> GetProductById(int productId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<ProductDto> GetProductByName(int productId)
+        public async Task<ProductDto> GetProductById(int productId)
         {
             Product product = await _db.Products.Where(x => x.ProductId == productId).FirstOrDefaultAsync();
             return _mapper.Map<ProductDto>(product);
@@ -66,7 +61,7 @@ namespace Mango.Services.ProductAPI.Repository
         {
             List<Product> productList = await _db.Products.ToListAsync();
             return _mapper.Map<List<ProductDto>>(productList);
-        }
 
+        }
     }
 }
